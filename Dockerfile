@@ -25,6 +25,10 @@ RUN apt-get install -y \
     openssh-client \
     software-properties-common \
     build-essential \
+    patch \
+    ruby-dev \
+    zlib1g-dev \
+    liblzma-dev \
     tar \
     lsb-core \
     lsb-release \
