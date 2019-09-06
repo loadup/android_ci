@@ -11,69 +11,60 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN mkdir -p /usr/share/man/man1
 RUN apt-get update
 RUN apt-get install -y \
-    git \
-    coreutils \
-    docker \
-    mercurial \
-    xvfb \
-    vim \
     apt \
-    locales \
-    sudo \
     apt-transport-https \
-    ca-certificates \
-    openssh-client \
-    software-properties-common \
     build-essential \
-    patch \
-    ruby-dev \
-    zlib1g-dev \
+    bzip2 \
+    ca-certificates \
+    coreutils \
+    curl \
+    docker \
+    git \
+    gnupg \
+    gzip \
+    jq \
+    lftp \
     liblzma-dev \
-    tar \
+    libreadline-dev \
+    libssl-dev \
+    locales \
     lsb-core \
     lsb-release \
-    gzip \
-    parallel \
+    mercurial \
     net-tools \
     netcat \
-    unzip \
-    zip \
-    bzip2 \
-    lftp \
-    gnupg \
-    curl \
-    wget \
-    jq \
+    openssh-client \
+    parallel \
+    patch \
+    ruby-dev \
+    software-properties-common \
+    sudo \
+    tar \
     tree \
-    ruby-full
+    unzip \
+    vim \
+    wget \
+    xvfb \
+    zip \
+    zlib1g-dev
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
+
+# Install Rbenv and Ruby
+RUN git clone https://github.com/sstephenson/rbenv.git /root/.rbenv
+RUN git clone https://github.com/sstephenson/ruby-build.git /root/.rbenv/plugins/ruby-build
+RUN /root/.rbenv/plugins/ruby-build/install.sh
+ENV PATH /root/.rbenv/bin:$PATH
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh # or /etc/profile
+RUN echo 'eval "$(rbenv init -)"' >> .bashrc
+RUN rbenv install 2.6.3 && rbenv rehash && rbenv global 2.6.3
 RUN gem install bundler -v '1.17.3'
 
 # Install node
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - \
     && apt-get install -y nodejs
 
-# Install Docker
-#ENV DOCKER_COMPOSE=1.23.2
-#RUN set -ex \
-#    && export DOCKER_VERSION=$(curl --silent --fail --retry 3 https://download.docker.com/linux/static/stable/x86_64/ | grep -o -e 'docker-[.0-9]*\.tgz' | sort -r | head -n 1) \
-#    && DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/${DOCKER_VERSION}" \
-#    && echo Docker URL: $DOCKER_URL \
-#    && curl --silent --show-error --location --fail --retry 3 --output /tmp/docker.tgz "${DOCKER_URL}" \
-#    && ls -lha /tmp/docker.tgz \
-#    && tar -xz -C /tmp -f /tmp/docker.tgz \
-#    && mv /tmp/docker/* /usr/bin \
-#    && rm -rf /tmp/docker /tmp/docker.tgz \
-#    && which docker \
-#    && (docker version || true)
-
-# Install Compose
-#RUN wget -q \
-#    https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE}/docker-compose-`uname -s`-`uname -m` -O /usr/local/bin/docker-compose \
-#    && chmod +x /usr/local/bin/docker-compose \
-#    && docker-compose --version
 
 # Entrypoint
 CMD ["/bin/sh"]
