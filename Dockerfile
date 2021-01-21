@@ -52,7 +52,7 @@ ENV LANG=C.UTF-8
 RUN gem install bundler -v '1.17.3'
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y nodejs
 
 # Entrypoint
