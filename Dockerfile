@@ -46,12 +46,27 @@ RUN apt-get install -y \
     jq \
     tree \
     ruby-full \
-    rbenv
+    autoconf \
+    bison  \
+    libssl-dev \
+    libyaml-dev \
+    libreadline6-dev  \
+    libncurses5-dev \
+    libffi-dev \
+    libgdbm6 \
+    libgdbm-dev \
+    libdb-dev
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
+RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv
+RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+RUN /root/.rbenv/plugins/ruby-build/install.sh
+ENV PATH /root/.rbenv/bin:$PATH
+RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
+RUN echo 'eval "$(rbenv init -)"' >> .bashrc
 RUN rbenv install 2.7.4
-RUN rbenv shell 2.7.4
+RUN rbenv global 2.7.4
 RUN gem install bundler
 
 # Install node
