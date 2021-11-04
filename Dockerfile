@@ -50,7 +50,6 @@ RUN apt-get install -y \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
-RUN rbenv init
 RUN rbenv install 2.7.4
 RUN rbenv shell 2.7.4
 RUN gem install bundler
