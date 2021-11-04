@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 # Make APT non-interactive
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/99semaphore
@@ -45,14 +45,18 @@ RUN apt-get install -y \
     wget \
     jq \
     tree \
-    ruby-full
+    ruby-full \
+    rbenv
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
-RUN gem install bundler -v '1.17.3'
+RUN rbenv init
+RUN rbenv install 2.7.4
+RUN rbenv shell 2.7.4
+RUN gem install bundler
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y nodejs
 
 # Entrypoint
