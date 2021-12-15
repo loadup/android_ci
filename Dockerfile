@@ -65,12 +65,12 @@ RUN /root/.rbenv/plugins/ruby-build/install.sh
 ENV PATH /root/.rbenv/bin:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
-RUN rbenv install 2.7.4
-RUN rbenv global 2.7.4
+RUN rbenv install 3.0.3
+RUN rbenv global 3.0.3
 RUN gem install bundler
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
 # Entrypoint
@@ -107,7 +107,7 @@ RUN yes | sdkmanager --licenses && yes | sdkmanager --update
 RUN sdkmanager "tools" "platform-tools"
 # RUN sdkmanager "emulator" "tools" "platform-tools"
 RUN yes | sdkmanager \
-    "platforms;android-30" \
+    "platforms;android-31" \
     "build-tools;29.0.3"
 #    "platforms;android-27" \
 #    "platforms;android-26" \
@@ -137,4 +137,4 @@ RUN yes | sdkmanager \
 
 # CleanUp
 RUN apt-get clean
-RUN sdkmanager "platforms;android-30"
+RUN sdkmanager "platforms;android-31"
