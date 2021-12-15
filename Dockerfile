@@ -70,7 +70,7 @@ RUN rbenv global 3.0.3
 RUN gem install bundler
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y nodejs
 
 # Entrypoint
