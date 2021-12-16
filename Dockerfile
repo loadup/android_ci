@@ -108,7 +108,7 @@ RUN sdkmanager "tools" "platform-tools"
 # RUN sdkmanager "emulator" "tools" "platform-tools"
 RUN yes | sdkmanager \
     "platforms;android-31" \
-    "build-tools;29.0.3"
+    "build-tools;30.0.3"
 #    "platforms;android-27" \
 #    "platforms;android-26" \
 #    "platforms;android-25" \
