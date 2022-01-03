@@ -107,7 +107,7 @@ RUN yes | sdkmanager --licenses && yes | sdkmanager --update
 RUN sdkmanager "tools" "platform-tools"
 # RUN sdkmanager "emulator" "tools" "platform-tools"
 RUN yes | sdkmanager \
-    "platforms;android-31" \
+    "platforms;android-30" \
     "build-tools;30.0.3"
 #    "platforms;android-27" \
 #    "platforms;android-26" \
@@ -137,4 +137,4 @@ RUN yes | sdkmanager \
 
 # CleanUp
 RUN apt-get clean
-RUN sdkmanager "platforms;android-31"
+RUN sdkmanager "platforms;android-30"
