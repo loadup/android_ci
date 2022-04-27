@@ -9,7 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Packages
 RUN mkdir -p /usr/share/man/man1
-RUN apt-get update
+RUN apt update
+RUN apt install wget curl
 
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
@@ -17,7 +18,7 @@ ENV LANG=C.UTF-8
 
 # Install node
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && apt-get install -y nodejs
+    && apt install -y nodejs
 
 # Entrypoint
 CMD ["/bin/sh"]
@@ -27,16 +28,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK_ROOT /opt/android-sdk-linux
 RUN dpkg --add-architecture i386
-RUN apt-get update -qq && apt-get install -y \
+RUN apt update -qq && apt install -y \
     openjdk-16-jdk libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386 \
-    xvfb lib32z1 lib32stdc++6 build-essential wget \
+    xvfb lib32z1 lib32stdc++6 build-essential \
     libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
     libglu1-mesa-dev
 
 # Additional deps
-RUN apt-get purge maven maven2 \
-    && apt-get update \
-    && apt-get -y install maven gradle \
+RUN apt purge maven maven2 \
+    && apt update \
+    && apt -y install maven gradle \
     && mvn --version \
     && gradle -v
 
@@ -75,15 +76,15 @@ RUN yes | sdkmanager \
 # Download Google Cloud SDK
 #RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-`lsb_release -c -s` main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 #RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-#RUN sudo apt-get update -qq
-#RUN sudo apt-get install -y -qq google-cloud-sdk \
+#RUN sudo apt update -qq
+#RUN sudo apt install -y -qq google-cloud-sdk \
 #    && gcloud config set core/disable_usage_reporting true \
 #    && gcloud config set component_manager/disable_update_check true
 
 # Additional packages ARM simmulator
-#RUN apt-get install -y libqt5widgets5
+#RUN apt install -y libqt5widgets5
 #ENV LD_LIBRARY_PATH ${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
 
 # CleanUp
-RUN apt-get clean
+RUN apt clean
 RUN sdkmanager "platforms;android-30"
