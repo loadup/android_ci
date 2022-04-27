@@ -10,67 +10,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install Packages
 RUN mkdir -p /usr/share/man/man1
 RUN apt-get update
-RUN apt-get install -y \
-    git \
-    coreutils \
-    docker \
-    mercurial \
-    xvfb \
-    vim \
-    apt \
-    locales \
-    sudo \
-    apt-transport-https \
-    ca-certificates \
-    openssh-client \
-    software-properties-common \
-    build-essential \
-    patch \
-    ruby-dev \
-    zlib1g-dev \
-    liblzma-dev \
-    tar \
-    lsb-core \
-    lsb-release \
-    gzip \
-    parallel \
-    net-tools \
-    netcat \
-    unzip \
-    zip \
-    bzip2 \
-    lftp \
-    gnupg \
-    curl \
-    wget \
-    jq \
-    tree \
-    ruby-full \
-    autoconf \
-    bison  \
-    libssl-dev \
-    libyaml-dev \
-    libreadline6-dev  \
-    libncurses5-dev \
-    libffi-dev \
-    libgdbm6 \
-    libgdbm-dev \
-    libdb-dev
+
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
-RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv
-RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-RUN /root/.rbenv/plugins/ruby-build/install.sh
-ENV PATH /root/.rbenv/bin:$PATH
-RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh
-RUN echo 'eval "$(rbenv init -)"' >> .bashrc
-RUN rbenv install 3.0.3
-RUN rbenv global 3.0.3
-RUN gem install bundler
 
 # Install node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get install -y nodejs
 
 # Entrypoint
@@ -82,8 +28,8 @@ ENV ANDROID_HOME /opt/android-sdk-linux
 ENV ANDROID_SDK_ROOT /opt/android-sdk-linux
 RUN dpkg --add-architecture i386
 RUN apt-get update -qq && apt-get install -y \
-    openjdk-8-jdk libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386 \
-    xvfb lib32z1 lib32stdc++6 build-essential \
+    openjdk-16-jdk libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386 \
+    xvfb lib32z1 lib32stdc++6 build-essential wget \
     libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
     libglu1-mesa-dev
 
@@ -96,10 +42,13 @@ RUN apt-get purge maven maven2 \
 
 # Download Android SDK
 RUN cd /opt \
-    && wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip \
-    && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
-    && rm android-sdk-tools.zip
-ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    && wget -q https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -O android-commandline-tools.zip \
+    && mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools \
+    && unzip -q android-commandline-tools.zip -d /tmp/ \
+    && mv /tmp/cmdline-tools/ ${ANDROID_SDK_ROOT}/cmdline-tools/latest \
+    && rm android-commandline-tools.zip && ls -la ${ANDROID_SDK_ROOT}/cmdline-tools/latest/
+
+ENV PATH ${PATH}:${ANDROID_SDK_ROOT}/platform-tools:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin
 
 # Install Android SDK
 RUN mkdir ~/.android && echo '### User Sources for Android SDK Manager' > ~/.android/repositories.cfg
